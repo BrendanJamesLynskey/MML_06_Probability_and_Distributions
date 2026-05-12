@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MML 06 &mdash; Probability and Distributions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+    <style>
+        :root { --bg-primary:#0a0a0a; --bg-card:#0d1117; --bg-code:#161b22; --text-primary:#e6edf3; --text-secondary:#8b949e; --accent:#a78bfa; --accent-dim:#a78bfa44; --accent-glow:#a78bfa33; --accent-2:#f472b6; --accent-3:#fbbf24; --accent-4:#34d399; --border:#21262d; --font-display:'Space Grotesk',sans-serif; --font-mono:'JetBrains Mono','Fira Code',monospace; --font-body:'Inter',sans-serif; --max-width:900px; }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        html{scroll-behavior:smooth}
+        body{background:var(--bg-primary);color:var(--text-primary);font-family:var(--font-body);font-size:17px;line-height:1.7;overflow-x:hidden}
+        .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:2rem 1.5rem;text-align:center;position:relative}
+        .hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:700px;height:600px;background:radial-gradient(circle,var(--accent-glow) 0%,transparent 70%);pointer-events:none;z-index:0}
+        .hero>*{position:relative;z-index:1}
+        .series-label{font-family:var(--font-mono);font-size:.85rem;color:var(--accent);letter-spacing:.15em;text-transform:uppercase;margin-bottom:1rem}
+        .hero h1{font-family:var(--font-display);font-size:clamp(2rem,5vw,3.2rem);font-weight:700;color:var(--text-primary);line-height:1.2;margin-bottom:1rem}
+        .hero h1 .accent{color:var(--accent)}
+        .hero .subtitle{font-size:1.1rem;color:var(--text-secondary);max-width:640px;margin-bottom:2rem}
+        .tags{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-bottom:2.5rem}
+        .tag{font-family:var(--font-mono);font-size:.75rem;padding:.25rem .75rem;border-radius:999px;border:1px solid var(--accent);color:var(--accent);background:var(--accent-dim);white-space:nowrap}
+        .pipeline{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.25rem;margin-bottom:1rem;max-width:var(--max-width)}
+        .pipeline-step{font-family:var(--font-mono);font-size:.7rem;padding:.3rem .7rem;background:var(--bg-card);border:1px solid var(--border);border-radius:4px;color:var(--text-secondary);white-space:nowrap}
+        .pipeline-arrow{color:var(--accent);font-size:.9rem;font-weight:700}
+        .slide{min-height:100vh;max-width:var(--max-width);margin:0 auto;padding:4rem 1.5rem;position:relative;display:flex;flex-direction:column;justify-content:center}
+        .slide-number{font-family:var(--font-display);font-size:5rem;font-weight:700;color:var(--accent-dim);position:absolute;top:2rem;right:1.5rem;line-height:1;user-select:none}
+        .slide h2{font-family:var(--font-display);font-size:1.9rem;font-weight:700;color:var(--accent);margin-bottom:1.5rem;line-height:1.25}
+        .slide h3{font-family:var(--font-display);font-size:1.3rem;font-weight:600;color:var(--text-primary);margin-top:1.5rem;margin-bottom:.75rem}
+        .slide p{margin-bottom:1rem;color:var(--text-secondary)}
+        .slide p strong{color:var(--text-primary)}
+        .slide ul,.slide ol{margin-bottom:1rem;padding-left:1.5rem;color:var(--text-secondary)}
+        .slide li{margin-bottom:.4rem}
+        .slide li strong{color:var(--text-primary)}
+        .slide code{background:var(--bg-code);padding:.1rem .35rem;border-radius:3px;font-family:var(--font-mono);font-size:.85em;color:var(--accent)}
+        .diagram-grid{display:grid;gap:.75rem;margin:1.5rem 0;padding:1.5rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px}
+        .diagram-grid.cols-2{grid-template-columns:1fr 1fr}
+        .diagram-grid.cols-3{grid-template-columns:1fr 1fr 1fr}
+        .diagram-panel{padding:1rem;background:var(--bg-code);border:1px solid var(--border);border-radius:6px}
+        .diagram-panel.accent-border{border-left:3px solid var(--accent)}
+        .diagram-panel.r{border-left:3px solid var(--accent-2)}
+        .diagram-panel.y{border-left:3px solid var(--accent-3)}
+        .diagram-panel.g{border-left:3px solid var(--accent-4)}
+        .diagram-panel h4{font-family:var(--font-display);font-size:1rem;color:var(--accent);margin-bottom:.5rem}
+        .diagram-panel.r h4{color:var(--accent-2)}
+        .diagram-panel.y h4{color:var(--accent-3)}
+        .diagram-panel.g h4{color:var(--accent-4)}
+        .diagram-panel p,.diagram-panel ul{font-size:.9rem}
+        .callout{background:var(--bg-card);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.25rem 0}
+        .callout p{margin-bottom:0}
+        .callout .callout-label{font-family:var(--font-mono);font-size:.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.3rem}
+        .canvas-wrap{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;margin:1.25rem 0;overflow-x:auto}
+        .canvas-wrap canvas{display:block;margin:0 auto;max-width:100%}
+        .control-panel{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.25rem 0}
+        .control-row{display:flex;flex-wrap:wrap;align-items:center;gap:.75rem;margin-bottom:.75rem}
+        .control-row label{font-family:var(--font-mono);font-size:.8rem;color:var(--text-secondary);min-width:130px}
+        .control-row input[type="range"]{flex:1;min-width:150px;accent-color:var(--accent)}
+        .control-row .val{font-family:var(--font-mono);font-size:.85rem;color:var(--accent);min-width:80px;text-align:right}
+        .btn{font-family:var(--font-mono);font-size:.8rem;padding:.4rem .9rem;background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent);border-radius:4px;cursor:pointer}
+        .btn:hover{background:rgba(167,139,250,.25)}
+        .btn.secondary{background:var(--bg-code);color:var(--text-secondary);border-color:var(--border)}
+        .metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.5rem;margin-top:.75rem}
+        .metric{background:var(--bg-code);border:1px solid var(--border);border-radius:6px;padding:.6rem .8rem;text-align:center}
+        .metric .metric-label{font-family:var(--font-mono);font-size:.7rem;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.08em}
+        .metric .metric-value{font-family:var(--font-display);font-size:1.25rem;color:var(--accent);font-weight:600;margin-top:.2rem}
+        .contents-list{list-style:none;padding-left:0;counter-reset:contents}
+        .contents-list li{counter-increment:contents;padding:.6rem 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem}
+        .contents-list li:last-child{border-bottom:none}
+        .contents-list li::before{content:counter(contents,decimal-leading-zero);font-family:var(--font-mono);font-size:.85rem;color:var(--accent);min-width:2rem}
+        .contents-list a{color:var(--text-primary);text-decoration:none}
+        .contents-list a:hover{color:var(--accent)}
+        .footer{text-align:center;padding:3rem 1.5rem;color:var(--text-secondary);font-size:.85rem;border-top:1px solid var(--border);max-width:var(--max-width);margin:0 auto}
+        .footer a{color:var(--accent);text-decoration:none}
+        .katex{color:var(--text-primary)}
+        .katex-display{margin:1rem 0;overflow-x:auto;overflow-y:hidden}
+        table{width:100%;border-collapse:collapse;font-size:.9rem;margin:1rem 0}
+        th{background:var(--bg-code);color:var(--accent);font-weight:600;text-align:left;padding:.6rem .85rem;border-bottom:1px solid var(--border);font-family:var(--font-display)}
+        td{padding:.5rem .85rem;border-bottom:1px solid var(--border);color:var(--text-secondary);vertical-align:top}
+        tr:last-child td{border-bottom:none}
+        tr:nth-child(even) td{background:rgba(13,17,23,.5)}
+        @media (max-width:640px){.slide{padding:3rem 1rem;min-height:auto}.slide-number{font-size:3rem;top:1.5rem;right:1rem}.slide h2{font-size:1.5rem}.diagram-grid.cols-2,.diagram-grid.cols-3{grid-template-columns:1fr}.hero h1{font-size:1.8rem}}
+    </style>
+</head>
+<body>
+
+<header class="hero">
+    <div class="series-label">Mathematics for Machine Learning &mdash; Deck 06</div>
+    <h1>Probability &amp; <span class="accent">Distributions</span></h1>
+    <p class="subtitle">From sum-rule, product-rule, and Bayes' theorem to the multivariate Gaussian's marginal and conditional &mdash; the toolkit of every probabilistic ML model.</p>
+
+    <div class="tags">
+        <span class="tag">sum rule</span><span class="tag">product rule</span>
+        <span class="tag">Bayes</span><span class="tag">Gaussian</span>
+        <span class="tag">conjugacy</span><span class="tag">exp. family</span>
+    </div>
+
+    <div class="pipeline">
+        <span class="pipeline-step">sample space</span>
+        <span class="pipeline-arrow">&rarr;</span>
+        <span class="pipeline-step">density</span>
+        <span class="pipeline-arrow">&rarr;</span>
+        <span class="pipeline-step">Bayes</span>
+        <span class="pipeline-arrow">&rarr;</span>
+        <span class="pipeline-step">Gaussian</span>
+        <span class="pipeline-arrow">&rarr;</span>
+        <span class="pipeline-step">conjugate update</span>
+    </div>
+</header>
+
+<section class="slide" id="slide-00">
+    <div class="slide-number">00</div>
+    <h2>Topics We'll Cover</h2>
+    <ul class="contents-list">
+        <li><a href="#slide-01">Sample spaces, events, probability</a></li>
+        <li><a href="#slide-02">Discrete vs continuous &mdash; pmf vs pdf</a></li>
+        <li><a href="#slide-03">Sum, product, Bayes</a></li>
+        <li><a href="#slide-04">Interactive: Bayes for a biased coin</a></li>
+        <li><a href="#slide-05">Expectation, variance, covariance</a></li>
+        <li><a href="#slide-06">The univariate and multivariate Gaussian</a></li>
+        <li><a href="#slide-07">Interactive: bivariate Gaussian explorer</a></li>
+        <li><a href="#slide-08">Marginal and conditional Gaussians</a></li>
+        <li><a href="#slide-09">Conjugacy and the exponential family</a></li>
+        <li><a href="#slide-10">Change of variables</a></li>
+        <li><a href="#slide-11">Where this lands in Part II</a></li>
+        <li><a href="#slide-12">Cheat sheet</a></li>
+    </ul>
+</section>
+
+<section class="slide" id="slide-01">
+    <div class="slide-number">01</div>
+    <h2>Sample Spaces, Events, Probability</h2>
+    <p>A <strong>sample space</strong> $\Omega$ is the set of possible outcomes of an experiment; an <strong>event</strong> is a subset $A\subseteq\Omega$. A <strong>probability measure</strong> $P$ assigns a number $P(A)\in[0,1]$ to every event, with $P(\Omega)=1$ and $P\bigl(\bigcup_i A_i\bigr) = \sum_i P(A_i)$ for disjoint $A_i$.</p>
+    <p>Most of the book glosses the measure-theoretic details because, in practice, ML works with two well-behaved cases:</p>
+    <ul>
+        <li><strong>Discrete</strong>: $\Omega$ is countable; $P$ is fixed by a probability mass function $p:\Omega\to[0,1]$ with $\sum_x p(x)=1$.</li>
+        <li><strong>Continuous</strong>: $\Omega\subseteq\mathbb{R}^D$; $P$ is fixed by a density $p:\mathbb{R}^D\to\mathbb{R}_{\ge 0}$ with $\int p(\mathbf{x})\,d\mathbf{x}=1$, and $P(A) = \int_A p(\mathbf{x})\,d\mathbf{x}$.</li>
+    </ul>
+    <p>In both cases we'll write $p(x)$ and let context disambiguate.</p>
+</section>
+
+<section class="slide" id="slide-02">
+    <div class="slide-number">02</div>
+    <h2>Discrete vs Continuous &mdash; pmf vs pdf</h2>
+    <div class="diagram-grid cols-2">
+        <div class="diagram-panel accent-border">
+            <h4>Discrete: pmf</h4>
+            <p>$p(x) = P(X = x) \in [0,1]$. Counts probability of an outcome.</p>
+            <p>$$\sum_{x}p(x) = 1.$$</p>
+            <p>Examples: Bernoulli, Binomial, Categorical, Poisson.</p>
+        </div>
+        <div class="diagram-panel y">
+            <h4>Continuous: pdf</h4>
+            <p>$p(x) \ge 0$ but <em>not</em> a probability &mdash; can exceed 1. Probability of a region is the integral:</p>
+            <p>$$P(X\in A) = \int_A p(x)\,dx, \qquad \int p(x)\,dx = 1.$$</p>
+            <p>Examples: Gaussian, Exponential, Beta, Gamma.</p>
+        </div>
+    </div>
+    <h3>The CDF unifies them</h3>
+    <p>The cumulative distribution function $F(x) = P(X\le x)$ is well-defined for both cases. In the continuous case $p = F'$ wherever $F$ is differentiable.</p>
+</section>
+
+<section class="slide" id="slide-03">
+    <div class="slide-number">03</div>
+    <h2>Sum, Product, Bayes</h2>
+    <p>The three rules that all of probabilistic ML is built from. State them once for joint $p(x,y)$ and read them everywhere.</p>
+
+    <h3>Sum rule (marginalisation)</h3>
+    <p>$$p(x) = \sum_{y} p(x,y) \quad\text{(or}\;\int p(x,y)\,dy\;\text{)}.$$</p>
+
+    <h3>Product rule (chain rule of probability)</h3>
+    <p>$$p(x,y) = p(x\mid y)\, p(y) = p(y\mid x)\, p(x).$$</p>
+
+    <h3>Bayes' theorem</h3>
+    <p>Equate the two product-rule decompositions:</p>
+    <p>$$\underbrace{p(\theta\mid \mathcal D)}_{\text{posterior}} = \frac{\overbrace{p(\mathcal D\mid \theta)}^{\text{likelihood}}\,\overbrace{p(\theta)}^{\text{prior}}}{\underbrace{p(\mathcal D)}_{\text{evidence}}}.$$</p>
+    <p>$p(\mathcal D)$ is just a normalising constant: $\int p(\mathcal D\mid\theta)\,p(\theta)\,d\theta$. It doesn't depend on $\theta$, which is why posterior maximisation (MAP) doesn't need to compute it.</p>
+
+    <div class="callout">
+        <div class="callout-label">Read every Bayesian model this way</div>
+        <p>Pick parameters $\theta$; pick likelihood $p(\mathcal D\mid\theta)$ and prior $p(\theta)$. Bayes hands you $p(\theta\mid\mathcal D)$, which is a complete description of what the data have taught you about $\theta$. <em>All</em> downstream questions &mdash; predictions, decisions, uncertainty &mdash; reduce to integrals against this posterior.</p>
+    </div>
+</section>
+
+<section class="slide" id="slide-04">
+    <div class="slide-number">04</div>
+    <h2>Interactive: Bayes for a Biased Coin</h2>
+    <p>A coin has unknown head probability $\theta\in[0,1]$. The prior is $\mathrm{Beta}(\alpha_0,\beta_0)$. Click the buttons to feed in observed heads / tails; the posterior $\mathrm{Beta}(\alpha_0+h,\, \beta_0+t)$ updates live.</p>
+
+    <div class="canvas-wrap">
+        <canvas id="bayes-canvas" width="700" height="280"></canvas>
+    </div>
+
+    <div class="control-panel">
+        <div class="control-row">
+            <label for="prior-a">prior α₀</label>
+            <input type="range" id="prior-a" min="1" max="20" step="1" value="2">
+            <div class="val" id="prior-a-readout">2</div>
+        </div>
+        <div class="control-row">
+            <label for="prior-b">prior β₀</label>
+            <input type="range" id="prior-b" min="1" max="20" step="1" value="2">
+            <div class="val" id="prior-b-readout">2</div>
+        </div>
+        <div class="control-row" style="margin-bottom:0">
+            <button class="btn" id="add-h">Flip heads (+1)</button>
+            <button class="btn" id="add-t">Flip tails (+1)</button>
+            <button class="btn secondary" id="bayes-reset">Reset evidence</button>
+        </div>
+        <div class="metric-grid">
+            <div class="metric"><div class="metric-label">heads</div><div class="metric-value" id="b-h">0</div></div>
+            <div class="metric"><div class="metric-label">tails</div><div class="metric-value" id="b-t">0</div></div>
+            <div class="metric"><div class="metric-label">posterior mean</div><div class="metric-value" id="b-mean">—</div></div>
+            <div class="metric"><div class="metric-label">95% credible</div><div class="metric-value" id="b-ci">—</div></div>
+        </div>
+    </div>
+
+    <p>The Beta is the <em>conjugate prior</em> for a Bernoulli likelihood: prior and posterior live in the same family, and the posterior pseudo-counts are just $(\alpha_0+h,\beta_0+t)$. Slide 09 explains why this works.</p>
+</section>
+
+<section class="slide" id="slide-05">
+    <div class="slide-number">05</div>
+    <h2>Expectation, Variance, Covariance</h2>
+    <h3>Expectation</h3>
+    <p>$$\mathbb{E}_p[f(X)] = \int f(x)\, p(x)\, dx.$$</p>
+    <p>Linear: $\mathbb{E}[\alpha X + \beta Y] = \alpha\mathbb{E}[X] + \beta\mathbb{E}[Y]$ &mdash; with or without independence.</p>
+
+    <h3>Variance and covariance</h3>
+    <p>$$\mathbb{V}[X] = \mathbb{E}[(X - \mathbb{E}[X])^2], \qquad \mathrm{Cov}(X,Y) = \mathbb{E}[(X-\mathbb{E}X)(Y-\mathbb{E}Y)].$$</p>
+    <p>For a random vector $\mathbf{X}$ the covariance is the matrix $\Sigma = \mathbb{E}[(\mathbf{X}-\boldsymbol\mu)(\mathbf{X}-\boldsymbol\mu)^\top]$ &mdash; symmetric and PSD.</p>
+
+    <h3>Useful identities</h3>
+    <ul>
+        <li>$\mathbb{V}[\alpha X + \beta Y] = \alpha^2\mathbb{V}[X] + \beta^2\mathbb{V}[Y] + 2\alpha\beta\,\mathrm{Cov}(X,Y)$;</li>
+        <li>For a matrix $A$: $\mathrm{Cov}(A\mathbf{X}) = A\,\mathrm{Cov}(\mathbf{X})\,A^\top$;</li>
+        <li>Independence implies $\mathrm{Cov} = 0$, but $\mathrm{Cov} = 0$ doesn't imply independence (unless Gaussian).</li>
+    </ul>
+</section>
+
+<section class="slide" id="slide-06">
+    <div class="slide-number">06</div>
+    <h2>The Univariate and Multivariate Gaussian</h2>
+    <h3>Univariate</h3>
+    <p>$$p(x\mid\mu,\sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}}\exp\!\left(-\frac{(x-\mu)^2}{2\sigma^2}\right).$$</p>
+
+    <h3>Multivariate</h3>
+    <p>$$p(\mathbf{x}\mid\boldsymbol\mu,\Sigma) = \frac{1}{(2\pi)^{D/2}|\Sigma|^{1/2}}\exp\!\left(-\tfrac12 (\mathbf{x}-\boldsymbol\mu)^\top\Sigma^{-1}(\mathbf{x}-\boldsymbol\mu)\right).$$</p>
+    <p>Three facts you'll use constantly:</p>
+    <ol>
+        <li><strong>Sum</strong>: $\mathcal{N}(\boldsymbol\mu_1,\Sigma_1) + \mathcal{N}(\boldsymbol\mu_2,\Sigma_2) = \mathcal{N}(\boldsymbol\mu_1+\boldsymbol\mu_2, \Sigma_1+\Sigma_2)$ (independent).</li>
+        <li><strong>Affine</strong>: $A\mathbf{X}+\mathbf{c}\sim\mathcal{N}(A\boldsymbol\mu+\mathbf{c}, A\Sigma A^\top)$.</li>
+        <li><strong>Product of two Gaussians (in $\mathbf{x}$) is Gaussian</strong>: the posterior of $\mathbf{x}$ under a Gaussian likelihood and Gaussian prior is Gaussian.</li>
+    </ol>
+
+    <div class="callout">
+        <div class="callout-label">Why the Gaussian is everywhere</div>
+        <p>It is the maximum-entropy distribution given a mean and covariance; the sum of independent terms tends to one (CLT); and it's closed under marginalisation, conditioning, sums, and linear maps. That algebraic closure is why deck 09 (Bayesian linear regression) has any closed-form solution at all.</p>
+    </div>
+</section>
+
+<section class="slide" id="slide-07">
+    <div class="slide-number">07</div>
+    <h2>Interactive: Bivariate Gaussian Explorer</h2>
+    <p>Drag the cross to move $\boldsymbol\mu$. Use the sliders to set $\sigma_x$, $\sigma_y$ and the correlation $\rho\in(-1,1)$. The density contours, principal axes (eigenvectors of $\Sigma$) and marginal densities update live.</p>
+
+    <div class="canvas-wrap">
+        <canvas id="gauss-canvas" width="540" height="360"></canvas>
+    </div>
+
+    <div class="control-panel">
+        <div class="control-row">
+            <label for="g-sx">σ_x</label>
+            <input type="range" id="g-sx" min="0.3" max="2.5" step="0.05" value="1.0">
+            <div class="val" id="g-sx-r">1.00</div>
+        </div>
+        <div class="control-row">
+            <label for="g-sy">σ_y</label>
+            <input type="range" id="g-sy" min="0.3" max="2.5" step="0.05" value="0.6">
+            <div class="val" id="g-sy-r">0.60</div>
+        </div>
+        <div class="control-row">
+            <label for="g-rho">correlation ρ</label>
+            <input type="range" id="g-rho" min="-0.95" max="0.95" step="0.01" value="0.6">
+            <div class="val" id="g-rho-r">0.60</div>
+        </div>
+    </div>
+
+    <p>The contours are ellipses; their axes are the eigenvectors of $\Sigma$. When $\rho=0$ the axes are aligned with $(x,y)$; turning up $|\rho|$ rotates the ellipse and stretches one axis.</p>
+</section>
+
+<section class="slide" id="slide-08">
+    <div class="slide-number">08</div>
+    <h2>Marginal and Conditional Gaussians</h2>
+    <p>Partition a joint Gaussian $\mathbf{X} = (\mathbf{X}_a, \mathbf{X}_b)$ with</p>
+    <p>$$\boldsymbol\mu = \begin{bmatrix}\boldsymbol\mu_a\\\boldsymbol\mu_b\end{bmatrix}, \quad \Sigma = \begin{bmatrix}\Sigma_{aa} &amp; \Sigma_{ab}\\\Sigma_{ba} &amp; \Sigma_{bb}\end{bmatrix}.$$</p>
+
+    <h3>Marginal</h3>
+    <p>$\mathbf{X}_a \sim \mathcal{N}(\boldsymbol\mu_a, \Sigma_{aa})$. Just throw away the rows and columns you don't want.</p>
+
+    <h3>Conditional</h3>
+    <p>$$\mathbf{X}_a \mid \mathbf{X}_b=\mathbf{x}_b \sim \mathcal{N}\bigl(\boldsymbol\mu_a + \Sigma_{ab}\Sigma_{bb}^{-1}(\mathbf{x}_b-\boldsymbol\mu_b),\; \Sigma_{aa} - \Sigma_{ab}\Sigma_{bb}^{-1}\Sigma_{ba}\bigr).$$</p>
+    <p>The conditional mean is the <em>linear regression of $\mathbf{X}_a$ on $\mathbf{X}_b$</em>; the conditional covariance is the Schur complement of $\Sigma_{bb}$ in $\Sigma$.</p>
+
+    <div class="callout">
+        <div class="callout-label">Linear regression preview</div>
+        <p>The Bayesian-linear-regression posterior of deck 09 is exactly the conditional distribution of weights given observed targets, when both are Gaussian. The formulae on this slide give it in one line.</p>
+    </div>
+</section>
+
+<section class="slide" id="slide-09">
+    <div class="slide-number">09</div>
+    <h2>Conjugacy and the Exponential Family</h2>
+
+    <h3>Conjugate prior</h3>
+    <p>A prior $p(\theta)$ is <strong>conjugate</strong> to a likelihood $p(\mathcal D\mid\theta)$ if the posterior is in the same family as the prior. The update is then a simple parameter shift &mdash; no integrals.</p>
+
+    <table>
+        <thead><tr><th>Likelihood</th><th>Conjugate prior</th><th>Update</th></tr></thead>
+        <tbody>
+            <tr><td>Bernoulli</td><td>Beta($\alpha,\beta$)</td><td>$\alpha\to\alpha+h$, $\beta\to\beta+t$</td></tr>
+            <tr><td>Gaussian (known $\sigma^2$)</td><td>Gaussian on $\mu$</td><td>standard formula in deck 09</td></tr>
+            <tr><td>Gaussian (known $\mu$)</td><td>Inverse-Gamma on $\sigma^2$</td><td>Inverse-Gamma update</td></tr>
+            <tr><td>Multivariate Gaussian</td><td>Normal-Inverse-Wishart</td><td>Joint update on $\boldsymbol\mu,\Sigma$</td></tr>
+            <tr><td>Categorical</td><td>Dirichlet</td><td>$\alpha_k\to\alpha_k + n_k$</td></tr>
+            <tr><td>Poisson</td><td>Gamma</td><td>standard Gamma update</td></tr>
+        </tbody>
+    </table>
+
+    <h3>The exponential family</h3>
+    <p>A family with density $p(x\mid\boldsymbol\theta) = h(x)\exp(\boldsymbol\eta(\boldsymbol\theta)^\top T(x) - A(\boldsymbol\theta))$ has a conjugate prior automatically (by inspection of $T$). All the distributions in the table above are exponential-family members.</p>
+</section>
+
+<section class="slide" id="slide-10">
+    <div class="slide-number">10</div>
+    <h2>Change of Variables</h2>
+    <p>Push-forward of a density under an invertible $\mathbf{y} = \mathbf{g}(\mathbf{x})$ with Jacobian $J_\mathbf{g}$:</p>
+    <p>$$p_Y(\mathbf{y}) = p_X(\mathbf{g}^{-1}(\mathbf{y}))\,\bigl|\det J_{\mathbf{g}^{-1}}(\mathbf{y})\bigr| = p_X(\mathbf{g}^{-1}(\mathbf{y}))\,\bigl|\det J_{\mathbf{g}}(\mathbf{g}^{-1}(\mathbf{y}))\bigr|^{-1}.$$</p>
+    <p>For an <em>affine</em> $\mathbf{y} = A\mathbf{x}+\mathbf{c}$ with $A$ invertible:</p>
+    <p>$$p_Y(\mathbf{y}) = p_X(A^{-1}(\mathbf{y}-\mathbf{c}))\,|\det A|^{-1}.$$</p>
+
+    <h3>Reparameterisation</h3>
+    <p>To sample $\mathbf{x}\sim\mathcal{N}(\boldsymbol\mu, \Sigma)$, sample $\mathbf{z}\sim\mathcal{N}(\mathbf{0}, I)$ and return $\boldsymbol\mu + L\mathbf{z}$ where $\Sigma = LL^\top$ is the Cholesky. This is the <em>reparameterisation trick</em> behind VAEs and almost every score-based generative model.</p>
+
+    <h3>Probability integral transform</h3>
+    <p>For any continuous $X$, $F_X(X)\sim\mathrm{Uniform}(0,1)$. Inverting: $X = F_X^{-1}(U)$ samples $X$ from a uniform $U$. This underlies inverse-transform sampling.</p>
+</section>
+
+<section class="slide" id="slide-11">
+    <div class="slide-number">11</div>
+    <h2>Where This Lands in Part II</h2>
+    <table>
+        <thead><tr><th>Concept</th><th>Used by</th><th>Where</th></tr></thead>
+        <tbody>
+            <tr><td>Likelihood &amp; prior</td><td>Every Bayesian Part II algorithm</td><td>MAP / posterior inference</td></tr>
+            <tr><td>Conjugate Gauss-Gauss update</td><td>Bayesian linear regression (ch. 9)</td><td>Closed-form posterior on weights</td></tr>
+            <tr><td>Multivariate Gaussian conditional</td><td>Linear regression, GP</td><td>Predictive distribution</td></tr>
+            <tr><td>Gaussian density</td><td>GMM (ch. 11)</td><td>Mixture components</td></tr>
+            <tr><td>Reparameterisation</td><td>Generative models</td><td>Backprop through sampling</td></tr>
+            <tr><td>Exponential family</td><td>Generalised linear models</td><td>Natural parameterisation</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<section class="slide" id="slide-12">
+    <div class="slide-number">12</div>
+    <h2>Cheat Sheet</h2>
+    <table>
+        <thead><tr><th>Quantity</th><th>Formula</th></tr></thead>
+        <tbody>
+            <tr><td>sum rule</td><td>$p(x) = \int p(x,y)\,dy$</td></tr>
+            <tr><td>product rule</td><td>$p(x,y) = p(x\mid y)p(y)$</td></tr>
+            <tr><td>Bayes</td><td>$p(\theta\mid\mathcal D)\propto p(\mathcal D\mid\theta)p(\theta)$</td></tr>
+            <tr><td>Gaussian density</td><td>$\frac{1}{(2\pi)^{D/2}|\Sigma|^{1/2}}e^{-\tfrac12 (\mathbf x-\boldsymbol\mu)^\top\Sigma^{-1}(\mathbf x-\boldsymbol\mu)}$</td></tr>
+            <tr><td>affine of Gaussian</td><td>$A\mathbf X+\mathbf c\sim\mathcal N(A\boldsymbol\mu+\mathbf c, A\Sigma A^\top)$</td></tr>
+            <tr><td>Gaussian sum</td><td>$\mathcal N(\boldsymbol\mu_1,\Sigma_1)+\mathcal N(\boldsymbol\mu_2,\Sigma_2)=\mathcal N(\boldsymbol\mu_1+\boldsymbol\mu_2,\Sigma_1+\Sigma_2)$</td></tr>
+            <tr><td>conditional Gaussian mean</td><td>$\boldsymbol\mu_a + \Sigma_{ab}\Sigma_{bb}^{-1}(\mathbf x_b-\boldsymbol\mu_b)$</td></tr>
+            <tr><td>conditional Gaussian covariance</td><td>$\Sigma_{aa} - \Sigma_{ab}\Sigma_{bb}^{-1}\Sigma_{ba}$</td></tr>
+            <tr><td>Beta-Bernoulli update</td><td>$\alpha\to\alpha+h,\;\beta\to\beta+t$</td></tr>
+            <tr><td>change of variables</td><td>$p_Y(\mathbf y)=p_X(\mathbf g^{-1}(\mathbf y))|\det J_{\mathbf g^{-1}}|$</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<footer class="footer">
+    <p><strong>Book:</strong> Deisenroth, Faisal &amp; Ong, <em>Mathematics for Machine Learning</em> &mdash; Cambridge University Press, 2020, chapter 6.<br>Free PDF: <a href="https://mml-book.github.io/book/mml-book.pdf">mml-book.github.io/book/mml-book.pdf</a></p>
+    <p style="margin-top:.6rem"><a href="https://brendanjameslynskey.github.io/MML_Hub/">&larr; All decks</a> &middot; <a href="https://brendanjameslynskey.github.io/MML_05_Vector_Calculus/">prev (05)</a> &middot; <a href="https://brendanjameslynskey.github.io/MML_07_Continuous_Optimisation/">next (07) &rarr;</a></p>
+</footer>
+
+<script>
+// --- Interactive 1: Beta-Bernoulli ---
+(function() {
+    const cvs = document.getElementById('bayes-canvas');
+    if (!cvs) return;
+    const ctx = cvs.getContext('2d');
+    const W = 700, H = 280;
+    cvs.width = W; cvs.height = H;
+
+    let a0 = 2, b0 = 2;
+    let heads = 0, tails = 0;
+
+    // log gamma for normalisation
+    function logGamma(z) {
+        const g = 7;
+        const c = [0.99999999999980993,676.5203681218851,-1259.1392167224028,771.32342877765313,-176.61502916214059,12.507343278686905,-0.13857109526572012,9.9843695780195716e-6,1.5056327351493116e-7];
+        if (z < 0.5) return Math.log(Math.PI/Math.sin(Math.PI*z)) - logGamma(1-z);
+        z--; let x = c[0];
+        for (let i=1;i<g+2;i++) x += c[i]/(z+i);
+        const t = z + g + 0.5;
+        return 0.5*Math.log(2*Math.PI) + (z+0.5)*Math.log(t) - t + Math.log(x);
+    }
+    function betaPdf(x, a, b) {
+        if (x<=0||x>=1) return 0;
+        const log = (a-1)*Math.log(x) + (b-1)*Math.log(1-x) + logGamma(a+b) - logGamma(a) - logGamma(b);
+        return Math.exp(log);
+    }
+    // approximate Beta quantile via bisection on the CDF (trapezoidal)
+    function betaCdf(x, a, b, n=200) {
+        if (x<=0) return 0;
+        if (x>=1) return 1;
+        let sum = 0;
+        const h = x/n;
+        for (let i=1;i<n;i++) sum += betaPdf(i*h, a, b);
+        return h * (sum + 0.5*betaPdf(x, a, b));
+    }
+    function betaQuantile(q, a, b) {
+        let lo=0, hi=1;
+        for (let it=0; it<40; it++) {
+            const m = 0.5*(lo+hi);
+            if (betaCdf(m, a, b) < q) lo = m; else hi = m;
+        }
+        return 0.5*(lo+hi);
+    }
+
+    function draw() {
+        ctx.fillStyle = '#0d1117'; ctx.fillRect(0,0,W,H);
+        const padL = 50, padR = 20, padT = 25, padB = 35;
+        // determine max density across prior and posterior to scale
+        const a1 = a0 + heads, b1 = b0 + tails;
+        const xs = 220, dx = 1/xs;
+        let yMax = 0;
+        const priorYs = [], postYs = [];
+        for (let i=0;i<=xs;i++) {
+            const x = i*dx;
+            const yp = betaPdf(x, a0, b0);
+            const yq = betaPdf(x, a1, b1);
+            priorYs.push(yp); postYs.push(yq);
+            if (yp>yMax) yMax=yp;
+            if (yq>yMax) yMax=yq;
+        }
+        // axes
+        ctx.strokeStyle = '#21262d'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(padL, padT); ctx.lineTo(padL, H-padB); ctx.lineTo(W-padR, H-padB); ctx.stroke();
+        // x tick
+        ctx.fillStyle = '#8b949e'; ctx.font = '12px JetBrains Mono, monospace';
+        for (let k=0; k<=5; k++) {
+            const x = padL + (W-padL-padR)*(k/5);
+            ctx.fillText((k/5).toFixed(1), x-8, H-padB+16);
+            ctx.beginPath(); ctx.moveTo(x, H-padB); ctx.lineTo(x, H-padB+4); ctx.stroke();
+        }
+        ctx.fillText('θ', (padL + W-padR)/2, H-padB+30);
+        ctx.fillText('p(θ)', 6, padT+6);
+
+        function plot(arr, colour) {
+            ctx.strokeStyle = colour; ctx.lineWidth = 2;
+            ctx.beginPath();
+            for (let i=0;i<arr.length;i++) {
+                const x = padL + (W-padL-padR)*(i/(arr.length-1));
+                const y = (H-padB) - (H-padB-padT)*(arr[i]/yMax);
+                if (i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+            }
+            ctx.stroke();
+            // fill
+            ctx.lineTo(W-padR, H-padB); ctx.lineTo(padL, H-padB); ctx.closePath();
+            ctx.fillStyle = colour.replace(')', ', 0.10)').replace('rgb', 'rgba');
+            ctx.fill();
+        }
+        plot(priorYs, 'rgb(139,148,158)');
+        plot(postYs, 'rgb(167,139,250)');
+
+        // labels
+        ctx.fillStyle = '#8b949e'; ctx.font = '600 13px Space Grotesk, sans-serif';
+        ctx.fillText(`prior Beta(${a0}, ${b0})`, padL+12, padT+18);
+        ctx.fillStyle = '#a78bfa';
+        ctx.fillText(`posterior Beta(${a1}, ${b1})`, padL+12, padT+36);
+
+        // metrics
+        document.getElementById('b-h').textContent = heads;
+        document.getElementById('b-t').textContent = tails;
+        const mean = a1/(a1+b1);
+        document.getElementById('b-mean').textContent = mean.toFixed(3);
+        if (a1>0 && b1>0) {
+            const lo = betaQuantile(0.025, a1, b1);
+            const hi = betaQuantile(0.975, a1, b1);
+            document.getElementById('b-ci').textContent = `[${lo.toFixed(2)}, ${hi.toFixed(2)}]`;
+        }
+    }
+    function rerender() {
+        a0 = parseInt(document.getElementById('prior-a').value, 10);
+        b0 = parseInt(document.getElementById('prior-b').value, 10);
+        document.getElementById('prior-a-readout').textContent = a0;
+        document.getElementById('prior-b-readout').textContent = b0;
+        draw();
+    }
+    document.getElementById('prior-a').addEventListener('input', rerender);
+    document.getElementById('prior-b').addEventListener('input', rerender);
+    document.getElementById('add-h').addEventListener('click', () => { heads++; draw(); });
+    document.getElementById('add-t').addEventListener('click', () => { tails++; draw(); });
+    document.getElementById('bayes-reset').addEventListener('click', () => { heads=0; tails=0; draw(); });
+    rerender();
+})();
+
+// --- Interactive 2: Bivariate Gaussian ---
+(function() {
+    const cvs = document.getElementById('gauss-canvas');
+    if (!cvs) return;
+    const ctx = cvs.getContext('2d');
+    const W = 540, H = 360;
+    cvs.width = W; cvs.height = H;
+
+    const xMin = -3, xMax = 3, yMin = -2.2, yMax = 2.2;
+    function toScreen(x, y) { return [(x-xMin)/(xMax-xMin)*W, H - (y-yMin)/(yMax-yMin)*H]; }
+    function fromScreen(sx, sy) { return [(sx/W)*(xMax-xMin)+xMin, yMin + (1 - sy/H)*(yMax-yMin)]; }
+
+    let mu = {x: 0, y: 0};
+    let sx = 1.0, sy = 0.6, rho = 0.6;
+    let dragging = false;
+
+    function draw() {
+        ctx.fillStyle = '#0d1117'; ctx.fillRect(0,0,W,H);
+        // axes
+        ctx.strokeStyle = '#21262d'; ctx.lineWidth = 1;
+        const ox = toScreen(0, 0);
+        ctx.beginPath(); ctx.moveTo(0, ox[1]); ctx.lineTo(W, ox[1]); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(ox[0], 0); ctx.lineTo(ox[0], H); ctx.stroke();
+
+        // contour lines: r = 1, 2, 3 (sigma multiples) using eigendecomposition
+        const a = sx*sx, b = rho*sx*sy, c = sy*sy;
+        // Sigma = [[a,b],[b,c]]
+        const trace = a + c;
+        const det = a*c - b*b;
+        const disc = Math.max(0, trace*trace/4 - det);
+        const l1 = trace/2 + Math.sqrt(disc);
+        const l2 = trace/2 - Math.sqrt(disc);
+        // eigenvector for l1
+        let ang;
+        if (Math.abs(b) < 1e-9) ang = (a >= c) ? 0 : Math.PI/2;
+        else ang = Math.atan2(l1 - a, b);
+
+        // grid colour fill (pdf)
+        const data = ctx.createImageData(W, H);
+        const inv = 1/(2*det+1e-12);
+        for (let py=0; py<H; py++) {
+            const [ , yw] = [0, yMin + (1 - py/H)*(yMax-yMin)];
+            for (let px=0; px<W; px++) {
+                const xw = (px/W)*(xMax-xMin)+xMin;
+                const ex = xw - mu.x, ey = yw - mu.y;
+                const m = c*ex*ex - 2*b*ex*ey + a*ey*ey;
+                const expo = -inv*m;
+                const v = Math.exp(expo);
+                const tt = Math.pow(Math.min(1, v), 0.6);
+                const k = (py*W+px)*4;
+                data.data[k]   = Math.round(13 + tt*154);
+                data.data[k+1] = Math.round(17 + tt*100);
+                data.data[k+2] = Math.round(23 + tt*180);
+                data.data[k+3] = 255;
+            }
+        }
+        ctx.putImageData(data,0,0);
+
+        // contour ellipses at r=1,2 (1- and 2-sigma)
+        for (let r=1; r<=2; r++) {
+            ctx.strokeStyle = (r===1)?'#fbbf24':'#f472b6';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            const N = 100;
+            for (let i=0;i<=N;i++) {
+                const t = (i/N)*2*Math.PI;
+                const u = r*Math.sqrt(l1)*Math.cos(t);
+                const v = r*Math.sqrt(l2)*Math.sin(t);
+                const xx = mu.x + Math.cos(ang)*u - Math.sin(ang)*v;
+                const yy = mu.y + Math.sin(ang)*u + Math.cos(ang)*v;
+                const [Sx, Sy] = toScreen(xx, yy);
+                if (i===0) ctx.moveTo(Sx, Sy); else ctx.lineTo(Sx, Sy);
+            }
+            ctx.stroke();
+        }
+        // axes of the ellipse
+        ctx.strokeStyle = '#a78bfa'; ctx.lineWidth = 1.5;
+        const k1 = Math.sqrt(l1)*2;
+        const ax1a = toScreen(mu.x + Math.cos(ang)*k1, mu.y + Math.sin(ang)*k1);
+        const ax1b = toScreen(mu.x - Math.cos(ang)*k1, mu.y - Math.sin(ang)*k1);
+        ctx.beginPath(); ctx.moveTo(ax1a[0], ax1a[1]); ctx.lineTo(ax1b[0], ax1b[1]); ctx.stroke();
+        const k2 = Math.sqrt(l2)*2;
+        const ax2a = toScreen(mu.x - Math.sin(ang)*k2, mu.y + Math.cos(ang)*k2);
+        const ax2b = toScreen(mu.x + Math.sin(ang)*k2, mu.y - Math.cos(ang)*k2);
+        ctx.beginPath(); ctx.moveTo(ax2a[0], ax2a[1]); ctx.lineTo(ax2b[0], ax2b[1]); ctx.stroke();
+
+        // mean cross
+        const m = toScreen(mu.x, mu.y);
+        ctx.strokeStyle = '#34d399'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(m[0]-8, m[1]); ctx.lineTo(m[0]+8, m[1]); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(m[0], m[1]-8); ctx.lineTo(m[0], m[1]+8); ctx.stroke();
+
+        // legend
+        ctx.fillStyle = '#fbbf24'; ctx.font = '12px JetBrains Mono, monospace';
+        ctx.fillText('1σ', 10, 20);
+        ctx.fillStyle = '#f472b6'; ctx.fillText('2σ', 40, 20);
+        ctx.fillStyle = '#a78bfa'; ctx.fillText('axes', 70, 20);
+    }
+
+    function updateLabels() {
+        document.getElementById('g-sx-r').textContent = sx.toFixed(2);
+        document.getElementById('g-sy-r').textContent = sy.toFixed(2);
+        document.getElementById('g-rho-r').textContent = rho.toFixed(2);
+    }
+
+    document.getElementById('g-sx').addEventListener('input', e => { sx = parseFloat(e.target.value); updateLabels(); draw(); });
+    document.getElementById('g-sy').addEventListener('input', e => { sy = parseFloat(e.target.value); updateLabels(); draw(); });
+    document.getElementById('g-rho').addEventListener('input', e => { rho = parseFloat(e.target.value); updateLabels(); draw(); });
+
+    cvs.addEventListener('pointerdown', e => {
+        const r = cvs.getBoundingClientRect();
+        const sx2 = (e.clientX-r.left)*(W/r.width), sy2 = (e.clientY-r.top)*(H/r.height);
+        const m = toScreen(mu.x, mu.y);
+        if ((sx2-m[0])**2 + (sy2-m[1])**2 < 18*18) dragging = true;
+    });
+    window.addEventListener('pointerup', () => dragging = false);
+    cvs.addEventListener('pointermove', e => {
+        if (!dragging) return;
+        const r = cvs.getBoundingClientRect();
+        const sx2 = (e.clientX-r.left)*(W/r.width), sy2 = (e.clientY-r.top)*(H/r.height);
+        const [wx, wy] = fromScreen(sx2, sy2);
+        mu.x = Math.max(xMin+0.2, Math.min(xMax-0.2, wx));
+        mu.y = Math.max(yMin+0.2, Math.min(yMax-0.2, wy));
+        draw();
+    });
+    updateLabels(); draw();
+})();
+</script>
+
+</body>
+</html>
