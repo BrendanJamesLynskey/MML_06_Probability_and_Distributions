@@ -6,12 +6,12 @@
     <title>MML 06 &mdash; Probability and Distributions</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&family=Alegreya+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400;1,700&family=Fira+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
     <style>
-        :root { --bg-primary:#222d29; --bg-card:#28342f; --bg-code:#2f3c37; --text-primary:#ecebe3; --text-secondary:#9caaa2; --accent:#c6b6e7; --accent-dim:#c6b6e744; --accent-glow:#c6b6e733; --accent-2:#e9a9c2; --accent-3:#f0e190; --accent-4:#a9dba2; --border:#3e4e48; --font-display:'Space Grotesk',sans-serif; --font-mono:'JetBrains Mono','Fira Code',monospace; --font-body:'Inter',sans-serif; --max-width:900px; }
+        :root { --bg-primary:#222d29; --bg-card:#28342f; --bg-code:#2f3c37; --text-primary:#ecebe3; --text-secondary:#9caaa2; --accent:#c6b6e7; --accent-dim:#c6b6e744; --accent-glow:#c6b6e733; --accent-2:#e9a9c2; --accent-3:#f0e190; --accent-4:#a9dba2; --border:#3e4e48; --font-display:'Alegreya',sans-serif; --font-mono:'Fira Mono','Fira Mono',monospace; --font-body:'Alegreya Sans',sans-serif; --max-width:900px; }
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
         html{scroll-behavior:smooth}
         body{background:var(--bg-primary);color:var(--text-primary);font-family:var(--font-body);font-size:17px;line-height:1.7;overflow-x:hidden}
@@ -454,7 +454,7 @@
         ctx.strokeStyle = '#3e4e48'; ctx.lineWidth = 1;
         ctx.beginPath(); ctx.moveTo(padL, padT); ctx.lineTo(padL, H-padB); ctx.lineTo(W-padR, H-padB); ctx.stroke();
         // x tick
-        ctx.fillStyle = '#9caaa2'; ctx.font = '12px JetBrains Mono, monospace';
+        ctx.fillStyle = '#9caaa2'; ctx.font = '12px Fira Mono, monospace';
         for (let k=0; k<=5; k++) {
             const x = padL + (W-padL-padR)*(k/5);
             ctx.fillText((k/5).toFixed(1), x-8, H-padB+16);
@@ -481,7 +481,7 @@
         plot(postYs, 'rgb(198,182,231)');
 
         // labels
-        ctx.fillStyle = '#9caaa2'; ctx.font = '600 13px Space Grotesk, sans-serif';
+        ctx.fillStyle = '#9caaa2'; ctx.font = '600 13px Alegreya, sans-serif';
         ctx.fillText(`prior Beta(${a0}, ${b0})`, padL+12, padT+18);
         ctx.fillStyle = '#c6b6e7';
         ctx.fillText(`posterior Beta(${a1}, ${b1})`, padL+12, padT+36);
@@ -605,7 +605,7 @@
         ctx.beginPath(); ctx.moveTo(m[0], m[1]-8); ctx.lineTo(m[0], m[1]+8); ctx.stroke();
 
         // legend
-        ctx.fillStyle = '#f0e190'; ctx.font = '12px JetBrains Mono, monospace';
+        ctx.fillStyle = '#f0e190'; ctx.font = '12px Fira Mono, monospace';
         ctx.fillText('1σ', 10, 20);
         ctx.fillStyle = '#e9a9c2'; ctx.fillText('2σ', 40, 20);
         ctx.fillStyle = '#c6b6e7'; ctx.fillText('axes', 70, 20);
